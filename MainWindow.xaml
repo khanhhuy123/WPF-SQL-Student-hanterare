@@ -1,0 +1,38 @@
+﻿<Window x:Class="WPF_sql.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_sql"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="49*"/>
+            <ColumnDefinition Width="151*"/>
+        </Grid.ColumnDefinitions>
+        <Button Content="Show All Student&#xD;&#xA;" HorizontalAlignment="Left" Margin="92,331,0,0" VerticalAlignment="Top" Height="43" Width="112" Click="ShowAllStudent" Grid.Column="1"/>
+        <DataGrid AutoGenerateColumns="True" Name="dataGrid1" Margin="66,0,0,103" SelectionChanged="DataGrid_SelectionChanged" Grid.Column="1"/>
+        <Button Content="Show All&#xD;&#xA;Student and Courses" HorizontalAlignment="Left" Margin="447,331,0,0" VerticalAlignment="Top" Width="130" Height="43" Click="ShowAllStudentCourse" Grid.Column="1"/>
+        <Button Content="Add Student" HorizontalAlignment="Left" Height="46" Margin="10,26,0,0" VerticalAlignment="Top" Width="100" Click="AddStudent"/>
+        <TextBox x:Name="firstTextBox" HorizontalAlignment="Left" Margin="81,246,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged" Grid.ColumnSpan="2"/>
+        <Button Content="Remove Student&#xD;&#xA;by ID" HorizontalAlignment="Left" Height="46" Margin="139,26,0,0" VerticalAlignment="Top" Width="100" Click="RemoveStudentByID" Grid.ColumnSpan="2" RenderTransformOrigin="0.26,0.675"/>
+        <Button Content="Add Course" HorizontalAlignment="Left" Height="46" Margin="10,92,0,0" VerticalAlignment="Top" Width="100" Click="AddCourseBtn"/>
+        <Button Content="Add Student&#xD;&#xA;to Course" HorizontalAlignment="Left" Height="46" Margin="139,92,0,0" VerticalAlignment="Top" Width="100" Click="AddStudentToCourse" Grid.ColumnSpan="2"/>
+        <Button Content="Find Student &#xD;&#xA;by First name" HorizontalAlignment="Left" Height="46" Margin="10,154,0,0" VerticalAlignment="Top" Width="100" Click="FindStudentByFirstName"/>
+        <Button Content="Show Courses" HorizontalAlignment="Left" Height="46" Margin="285,331,0,0" VerticalAlignment="Top" Width="100" Click="ShowCourses" Grid.Column="1"/>
+        <Label Name="firstNameLabel" Content="First Name:" HorizontalAlignment="Left" Height="28" Margin="10,241,0,0" VerticalAlignment="Top" Width="71"/>
+        <Label Name="lastNameLabel" Content="Last Name:" HorizontalAlignment="Left" Margin="10,286,0,0" VerticalAlignment="Top" Width="71"/>
+        <TextBox x:Name="secondTextBox" HorizontalAlignment="Left" Height="19" Margin="81,289,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.508,0.142" TextChanged="TextBox_TextChanged" Grid.ColumnSpan="2"/>
+        <Label Name="ageLabel" Content="Age:" HorizontalAlignment="Left" Margin="10,328,0,0" VerticalAlignment="Top" Width="71"/>
+        <TextBox x:Name="thirdTextBox" HorizontalAlignment="Left" Height="19" Margin="81,331,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.508,0.142" TextChanged="TextBox_TextChanged" Grid.ColumnSpan="2"/>
+        <Button x:Name="DoneBtn" Content="Done" HorizontalAlignment="Left" Margin="15,373,0,0" VerticalAlignment="Top" Width="78" Height="23" Click="DoneBtn_Click"/>
+        <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="115,373,0,0" VerticalAlignment="Top" Width="78" Height="23" Click="CancelButton"/>
+        <Label x:Name="IDLabel" Content="ID" HorizontalAlignment="Left" Height="28" Margin="10,241,0,0" VerticalAlignment="Top" Width="22"/>
+        <Label x:Name="CourseNameLabel" Content="Course name:" HorizontalAlignment="Left" Height="23" Margin="-2,241,0,0" VerticalAlignment="Top" Width="114"/>
+        <Label x:Name="StudentID" Content="StudentID:" HorizontalAlignment="Left" Height="25" Margin="15,241,0,0" VerticalAlignment="Top" Width="66"/>
+        <Label x:Name="CourseID" Content="CourseID:" HorizontalAlignment="Left" Height="24" Margin="17,286,0,0" VerticalAlignment="Top" Width="62"/>
+
+
+    </Grid>
+</Window>
