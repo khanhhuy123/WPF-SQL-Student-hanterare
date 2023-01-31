@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,36 +79,34 @@ namespace WPF_sql
         }
 
         //Add student to student table
-        public bool AddStudentToStudentTable(string firstName, string lastName, int age)
+        public void AddStudentToStudentTable(string firstName, string lastName, int age)
         {
             Open();
-            _command.CommandText = "INSERT INTO students (firstName, lastName, age) VALUES (@firstName, @lastName, @age);";
-
-
-            SQLiteParameter firstNameParam = new SQLiteParameter("@firstName", System.Data.DbType.String);
-            SQLiteParameter lastNameParam = new SQLiteParameter("@lastName", System.Data.DbType.String);
-            SQLiteParameter ageParam = new SQLiteParameter("@age", System.Data.DbType.Int32);
-
-            firstNameParam.Value = firstName;
-            lastNameParam.Value = lastName;
-            ageParam.Value = age;
-
-            _command.Parameters.Add(firstNameParam);
-            _command.Parameters.Add(lastNameParam);
-            _command.Parameters.Add(ageParam);
-
-            _command.Prepare();
-            int check = _command.ExecuteNonQuery();
-            Close();
-
-
-            if (check == 1)
+            try
             {
-                return true;
+                _command.CommandText = "INSERT INTO students (firstName, lastName, age) VALUES (@firstName, @lastName, @age);";
+
+
+                SQLiteParameter firstNameParam = new SQLiteParameter("@firstName", System.Data.DbType.String);
+                SQLiteParameter lastNameParam = new SQLiteParameter("@lastName", System.Data.DbType.String);
+                SQLiteParameter ageParam = new SQLiteParameter("@age", System.Data.DbType.Int32);
+
+                firstNameParam.Value = firstName;
+                lastNameParam.Value = lastName;
+                ageParam.Value = age;
+
+                _command.Parameters.Add(firstNameParam);
+                _command.Parameters.Add(lastNameParam);
+                _command.Parameters.Add(ageParam);
+
+                _command.Prepare();
+                _command.ExecuteNonQuery();
+                Close();
+                MessageBox.Show("Student Added!");
             }
-            else
+            catch (Exception expectation)
             {
-                return false;
+                MessageBox.Show(expectation.Message);
             }
 
         }
@@ -156,7 +155,7 @@ namespace WPF_sql
         //Remove student using ID
         public void RemoveStudentByID(int id)
         {
-            Open();     
+            Open();
             try
             {
                 _command.CommandText = "DELETE FROM students WHERE id = @id;";
@@ -170,6 +169,7 @@ namespace WPF_sql
                 _command.Prepare();
                 _command.ExecuteNonQuery();
                 Close();
+                MessageBox.Show("Student Removed!");
             }
             catch (Exception expectation)
             {
@@ -178,59 +178,57 @@ namespace WPF_sql
         }
 
         //Add course to courses table
-        public bool AddCourse(string courseName)
+        public void AddCourse(string courseName)
         {
             Open();
-            _command.CommandText = "INSERT INTO courses (courseName) VALUES (@courseName);";
-
-
-            SQLiteParameter courseNameParam = new SQLiteParameter("@courseName", System.Data.DbType.String);
-
-            courseNameParam.Value = courseName;
-
-            _command.Parameters.Add(courseNameParam);
-
-            _command.Prepare();
-            int check = _command.ExecuteNonQuery();
-            Close();
-
-            if (check == 1)
+            try
             {
-                return true;
+                _command.CommandText = "INSERT INTO courses (courseName) VALUES (@courseName);";
+
+
+                SQLiteParameter courseNameParam = new SQLiteParameter("@courseName", System.Data.DbType.String);
+
+                courseNameParam.Value = courseName;
+
+                _command.Parameters.Add(courseNameParam);
+
+                _command.Prepare();
+                _command.ExecuteNonQuery();
+                MessageBox.Show("Course Added!");
+                Close();
             }
-            else
+            catch (Exception expectation)
             {
-                return false;
+                MessageBox.Show(expectation.Message);
             }
         }
 
         //Add studentID and courseID to student_course Table
-        public bool AddStudentToCourse(int studentID, int courseID)
+        public void AddStudentToCourse(int studentID, int courseID)
         {
             Open();
-            _command.CommandText = "INSERT INTO student_course (studentID, courseID) VALUES (@studentID, @courseID);";
-
-            SQLiteParameter studentIDPARAM = new SQLiteParameter("@studentID", System.Data.DbType.Int32);
-            SQLiteParameter courseIDPARAM = new SQLiteParameter("@courseID", System.Data.DbType.Int32);
-
-            studentIDPARAM.Value = studentID;
-            courseIDPARAM.Value = courseID;
-
-            _command.Parameters.Add(studentIDPARAM);
-            _command.Parameters.Add(courseIDPARAM);
-
-
-            _command.Prepare();
-            int check = _command.ExecuteNonQuery();
-            Close();
-
-            if (check == 1)
+            try
             {
-                return true;
+                _command.CommandText = "INSERT INTO student_course (studentID, courseID) VALUES (@studentID, @courseID);";
+
+                SQLiteParameter studentIDPARAM = new SQLiteParameter("@studentID", System.Data.DbType.Int32);
+                SQLiteParameter courseIDPARAM = new SQLiteParameter("@courseID", System.Data.DbType.Int32);
+
+                studentIDPARAM.Value = studentID;
+                courseIDPARAM.Value = courseID;
+
+                _command.Parameters.Add(studentIDPARAM);
+                _command.Parameters.Add(courseIDPARAM);
+
+
+                _command.Prepare();
+                _command.ExecuteNonQuery();
+                MessageBox.Show("Student Added to course!");
+                Close();
             }
-            else
+            catch (Exception expectation)
             {
-                return false;
+                MessageBox.Show(expectation.Message);
             }
         }
 
@@ -277,6 +275,53 @@ namespace WPF_sql
             }
 
         }
+
+        public int FindStudentByID(int id, DataGrid dataGrid1)
+        {
+            Open();
+            try
+            {
+                _command.CommandText = "SELECT * FROM students WHERE id = @id;";
+                _command.Parameters.AddWithValue("@id", id);
+                _command.ExecuteNonQuery();
+
+                dataAdp = new SQLiteDataAdapter(_command);
+                dt = new DataTable();
+                dataAdp.Fill(dt);
+                dataGrid1.ItemsSource = dt.DefaultView;
+                return id;
+                Close();
+            }
+            catch (Exception expectation)
+            {
+                MessageBox.Show(expectation.Message);
+            }
+            return id;
+        }
+
+        public void UpdateStudentFirstName(int id, string firstName, string lastName, int age, DataGrid dataGrid1)
+        {
+            Open();
+            try
+            {
+                FindStudentByID(id, dataGrid1);
+                _command.CommandText = "UPDATE students SET firstName = @firstName, lastName = @lastName, age = @age WHERE id = @id;";
+                _command.ExecuteNonQuery();
+
+                Close();
+            }
+            catch (Exception expectation)
+            {
+                MessageBox.Show(expectation.Message);
+            }
+
+        }
     }
 
 }
+
+//To Add
+// Update student information
+// Remove course
+// Find course by name
+// Update course information
