@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,7 +38,7 @@ namespace WPF_sql
         public SQLiteHandler(string databaseName)
         {
             _database_name = databaseName;
-            _connection_string = "URI=file:" + databaseName;
+            _connection_string = "URI=file:" + databaseName + ";foreign keys=true;";
             _connection = new SQLiteConnection(_connection_string);
 
             CheckSQLiteVersion();
@@ -101,6 +100,7 @@ namespace WPF_sql
             int check = _command.ExecuteNonQuery();
             Close();
 
+
             if (check == 1)
             {
                 return true;
@@ -138,7 +138,7 @@ namespace WPF_sql
             Open();
             try
             {
-                _command.CommandText = "SELECT courses.courseName, students.firstName, students.lastName FROM students INNER JOIN courses ON courses.id = student_course.courseID INNER JOIN student_course ON students.id = student_course.studentID ORDER BY courseName ASC;";
+                _command.CommandText = "SELECT courses.id AS \"Course ID\", courses.courseName AS \"Course Name\", students.firstName AS \"First Name\", students.lastName AS \"Last Name\", students.id AS \"Student ID\" FROM students INNER JOIN courses ON courses.id = student_course.courseID INNER JOIN student_course ON students.id = student_course.studentID ORDER BY courseName ASC;";
                 _command.ExecuteNonQuery();
 
                 dataAdp = new SQLiteDataAdapter(_command);
@@ -154,29 +154,26 @@ namespace WPF_sql
         }
 
         //Remove student using ID
-        public bool RemoveStudentByID(int id)
+        public void RemoveStudentByID(int id)
         {
-            Open();
-            _command.CommandText = "DELETE FROM students WHERE id = @id;";
-
-            SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
-
-            idParam.Value = id;
-
-            _command.Parameters.Add(idParam);
-
-            _command.Prepare();
-            int check = _command.ExecuteNonQuery();
-
-            Close();
-
-            if (check == 1)
+            Open();     
+            try
             {
-                return true;
+                _command.CommandText = "DELETE FROM students WHERE id = @id;";
+
+                SQLiteParameter idParam = new SQLiteParameter("@id", System.Data.DbType.Int32);
+
+                idParam.Value = id;
+
+                _command.Parameters.Add(idParam);
+
+                _command.Prepare();
+                _command.ExecuteNonQuery();
+                Close();
             }
-            else
+            catch (Exception expectation)
             {
-                return false;
+                MessageBox.Show(expectation.Message);
             }
         }
 
